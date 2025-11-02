@@ -12,16 +12,22 @@
 - **Implementation**:
   - 'sync.Mutex' guards the arrival counter 'arrived'. The last arriving goroutine sends a signal to the channel 'barrier', and other goroutines block on channel reception to achieve "collective execution after all arrive".
 
- # 3. barrier2 
+# 3. barrier2 
 - **Function**：Reusable barrier, supports multiple rounds of barrier synchronization with optimized performance.
 - **Implementation**:
   - Replaces 'Mutex' with atomic operations to reduce overhead and improve concurrent counting efficiency.
   - When the last goroutine arrives, it sends a channel signal and resets the atomic counter, enabling the barrier to be reused in multi-round scenarios
   - Leverages an unbuffered channel 'theChan' to implement synchronous blocking between goroutines.
  
-  # 4. Parallel Game of Life
+# 4. dinPhil
+- **Function**：Dining Philosophers problem. Five philosophers run concurrently and execute the loop (think, take forks, eat, put forks), while safely sharing 5 forks without causing a deadlock.
+- **Implementation**:
+  - Each philosopher is started as a separate goroutine, so all 5 philosophers run at the same time.
+  - Even-indexed philosophers take their left fork first and then the right fork, while odd-indexed philosophers take the right fork first and then their left fork. This breaks the circular wait and prevents the deadlock where everyone is waiting for the next fork.
+# 5. Parallel Game of Life
 - **Function**：Parallelizes the next generation computation of Conway's Game of Life so that multiple goroutines can update the board at the same time.
 - **Implementation**:
   - The 300×300 grid is split into 3 row segments, and each segment is handled by one goroutine.
   - Each goroutine reads neighbors from the current grid and writes the results only to its own rows in the buffer, so there is no write conflict.
   - A sync.WaitGroup is used as a barrier: the main goroutine waits until all worker goroutines finish this generation, then swaps buffer and grid to complete the update.
+
