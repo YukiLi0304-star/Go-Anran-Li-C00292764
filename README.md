@@ -18,3 +18,10 @@
   - Replaces 'Mutex' with atomic operations to reduce overhead and improve concurrent counting efficiency.
   - When the last goroutine arrives, it sends a channel signal and resets the atomic counter, enabling the barrier to be reused in multi-round scenarios
   - Leverages an unbuffered channel 'theChan' to implement synchronous blocking between goroutines.
+ 
+  # 4. Parallel Game of Life
+- **Function**：Parallelizes the next generation computation of Conway's Game of Life so that multiple goroutines can update the board at the same time.
+- **Implementation**:
+  - The 300×300 grid is split into 3 row segments, and each segment is handled by one goroutine.
+  - Each goroutine reads neighbors from the current grid and writes the results only to its own rows in the buffer, so there is no write conflict.
+  - A sync.WaitGroup is used as a barrier: the main goroutine waits until all worker goroutines finish this generation, then swaps buffer and grid to complete the update.
