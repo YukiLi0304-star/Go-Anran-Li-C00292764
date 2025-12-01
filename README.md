@@ -1,25 +1,25 @@
 # Name:Anran Li 
 # Student ID:C00292764
 
-# 1.Lab_Three_Simple_Barrier/barrier
+# 1.barrier
 - **Function**：Basic barrier synchronization, all goroutines must complete "Part A" before collectively proceeding to "Part B".
 - **Implementation**:
   - Uses 'sync.Mutex' to protect the counter 'count', ensuring thread-safe counting in concurrent scenarios.
   - The last goroutine to finish "Part A" closes the channel 'barriers', which unblocks all goroutines to execute "Part B".
 
-# 2.Lab_Three_Simple_Barrier/Rendezvous 
+# 2.Rendezvous 
 - **Function**：Rendezvous synchronization, after goroutines arrive at "Part A" with random delays, they all proceed to "Part B" collectively.
 - **Implementation**:
   - 'sync.Mutex' guards the arrival counter 'arrived'. The last arriving goroutine sends a signal to the channel 'barrier', and other goroutines block on channel reception to achieve "collective execution after all arrive".
 
-# 3. Lab_Four_Reusable_Barrier/barrier2 
+# 3.barrier2 
 - **Function**：Reusable barrier, supports multiple rounds of barrier synchronization with optimized performance.
 - **Implementation**:
   - Replaces 'Mutex' with atomic operations to reduce overhead and improve concurrent counting efficiency.
   - When the last goroutine arrives, it sends a channel signal and resets the atomic counter, enabling the barrier to be reused in multi-round scenarios
   - Leverages an unbuffered channel 'theChan' to implement synchronous blocking between goroutines.
  
-# 4. Lab_Five_DiningPhilosophers/dinPhil
+# 4. dinPhil
 - **Function**： Implements a concurrent solution to the Dining Philosophers problem. Five philosophers simultaneously execute the cycle of thinking, taking forks, eating, and putting down forks, while safely sharing five forks without deadlock.Employs a uniform acquisition order strategy: all philosophers always pick up the smaller-numbered fork first, then the larger-numbered fork. This unified behavior completely eliminates circular wait, ensuring deadlock freedom.
 - **Implementation**:
   - Each fork is represented by a channel with buffer size 1.
